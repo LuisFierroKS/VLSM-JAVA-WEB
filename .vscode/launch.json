@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "ProcesarDatos",
+            "request": "launch",
+            "mainClass": "ProcesarDatos",
+            "projectName": "VLSM JAVA WEB_ae11676a",
+            "vmArgs": "-cp build;libs/*"
+        }
+    ]
+}
