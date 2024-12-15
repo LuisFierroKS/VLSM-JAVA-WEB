@@ -16,13 +16,13 @@ public class ProcesarDatos {
         
 
         // Configura la carpeta para archivos estáticos
-        staticFiles.location("/public"); // Usa la carpeta resources/public en tu JAR
+        staticFiles.location("/public"); // Sirve archivos desde resources/public
 
-        // Ruta raíz (/) para redirigir al archivo inicio.html
         get("/", (req, res) -> {
             res.redirect("/html/inicio.html");
-            return null; // La redirección no necesita devolver ningún contenido
+            return null; // No necesita contenido adicional
         });
+        
 
 
         // Ruta para el favicon
