@@ -3,9 +3,8 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 
@@ -13,10 +12,13 @@ import static spark.Spark.*;
 
 public class ProcesarDatos {
     public static void main(String[] args) {
-        port(8080); // Configura el puerto del servidor
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
+        port(port);
+        
 
         // Configura la carpeta para archivos estáticos
-        staticFiles.externalLocation("C:/Users/user_win10/Desktop/VLSM JAVA WEB/public");
+        staticFiles.location("/public"); // Usa la carpeta resources/public en tu JAR
+
 
         // Ruta para procesar el formulario
         post("/procesar", (req, res) -> {
@@ -37,9 +39,8 @@ public class ProcesarDatos {
             // Generar los pasos detallados del cálculo VLSM
             StringBuilder steps = calculateVLSM(ipAddress, subnetMask, requests);
 
-            // Configurar la respuesta como PDF
-            res.type("application/pdf");
-            res.header("Content-Disposition", "attachment; filename=resultados-vlsm.pdf");
+            // Configurar la respuesta HTML
+            res.type("text/html");
 
             // Crear el PDF utilizando iText 5
             try (ByteArrayOutputStream pdfOutput = new ByteArrayOutputStream()) {
@@ -52,17 +53,82 @@ public class ProcesarDatos {
                 document.add(new Paragraph(steps.toString()));
                 document.close();
 
-                // Escribir el contenido del PDF en la respuesta
-                try (OutputStream out = res.raw().getOutputStream()) {
-                    out.write(pdfOutput.toByteArray());
-                    out.flush();
-                }
+                // Convertir el PDF en base64
+                String pdfBase64 = Base64.getEncoder().encodeToString(pdfOutput.toByteArray());
+
+                // Generar la respuesta HTML con el botón "Regresar"
+                return "<html>" +
+                "<head>" +
+                "<title>Resultados VLSM</title>" +
+                "<style>" +
+                "body {" +
+                "    font-family: Arial, sans-serif;" +
+                "    background-color: #e3f2fd;" + // Azul claro
+                "    margin: 0;" +
+                "    padding: 0;" +
+                "    color: #0d47a1;" + // Azul oscuro
+                "}" +
+                "h1 {" +
+                "    background-color: #1565c0;" + // Azul medio
+                "    color: white;" +
+                "    padding: 20px;" +
+                "    text-align: center;" +
+                "    margin: 0;" +
+                "}" +
+                "pre {" +
+                "    background-color: #ffffff;" + // Blanco
+                "    padding: 20px;" +
+                "    margin: 20px;" +
+                "    border: 1px solid #bbdefb;" + // Azul claro
+                "    border-radius: 5px;" +
+                "    overflow-x: auto;" +
+                "    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);" +
+                "}" +
+                "a {" +
+                "    display: inline-block;" +
+                "    margin: 20px;" +
+                "    padding: 10px 20px;" +
+                "    background-color: #0d47a1;" + // Azul oscuro
+                "    color: white;" +
+                "    text-decoration: none;" +
+                "    border-radius: 5px;" +
+                "    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);" +
+                "    font-weight: bold;" +
+                "}" +
+                "a:hover {" +
+                "    background-color: #1565c0;" + // Azul medio
+                "}" +
+                "button {" +
+                "    display: inline-block;" +
+                "    margin: 20px;" +
+                "    padding: 10px 20px;" +
+                "    background-color: #42a5f5;" + // Azul brillante
+                "    color: white;" +
+                "    border: none;" +
+                "    border-radius: 5px;" +
+                "    cursor: pointer;" +
+                "    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);" +
+                "    font-weight: bold;" +
+                "}" +
+                "button:hover {" +
+                "    background-color: #1e88e5;" + // Azul más oscuro
+                "}" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<h1>Resultados del Subnetting VLSM</h1>" +
+                "<pre>" + steps.toString() + "</pre>" +
+                "<a href='data:application/pdf;base64," + pdfBase64 + "' download='resultados-vlsm.pdf'>Descargar PDF</a>" +
+                "<button onclick='window.location.href=\"/html/inicio.html\"'>Regresar</button>" +
+                "</body>" +
+                "</html>";
+
+        
             } catch (Exception e) {
                 e.printStackTrace();
                 halt(500, "Error al generar el PDF.");
+                return null;
             }
-
-            return res.raw();
         });
     }
 
@@ -144,8 +210,6 @@ public class ProcesarDatos {
                 remainingHosts -= maxHosts;
             }
 
-            // Agregar las subredes sobrantes en orden inverso
-            Collections.reverse(leftoverSubnets);
             for (String subnet : leftoverSubnets) {
                 remainingSubnets.append(subnet);
             }

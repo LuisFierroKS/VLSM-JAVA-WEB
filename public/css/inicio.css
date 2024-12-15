@@ -1,76 +1,70 @@
-/* Configuración general del cuerpo */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    color: #ffffff;
 }
 
-/* Contenedor principal */
 .container {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     width: 400px;
-    padding: 20px;
+    padding: 30px;
     text-align: center;
 }
 
-/* Título principal */
 h1 {
     color: #333;
-    margin-bottom: 20px;
-    font-size: 24px;
+    margin-bottom: 25px;
+    font-size: 28px;
 }
 
-/* Estilo de los grupos del formulario */
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-/* Etiquetas de los campos */
 label {
     font-weight: bold;
     font-size: 14px;
     color: #555;
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
 }
 
-/* Campos de entrada */
 input {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     box-sizing: border-box;
+    font-size: 14px;
 }
 
-/* Botón de envío */
 button {
     width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
+    padding: 12px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Hover en el botón */
 button:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Cambios en pantallas pequeñas */
 @media (max-width: 480px) {
     .container {
         width: 90%;
+        padding: 20px;
     }
 }
