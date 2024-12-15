@@ -12,13 +12,25 @@ import static spark.Spark.*;
 
 public class ProcesarDatos {
     public static void main(String[] args) {
-        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
-        port(port);
+        port(8080); // Configura el puerto del servidor
         
 
         // Configura la carpeta para archivos estáticos
         staticFiles.location("/public"); // Usa la carpeta resources/public en tu JAR
 
+        // Ruta raíz (/) para manejar la solicitud inicial
+        get("/", (req, res) -> {
+            res.type("text/html");
+            return "<html><head><title>VLSM Calculator</title></head>" +
+                   "<body><h1>Bienvenido a la Calculadora VLSM</h1>" +
+                   "<p><a href='/html/inicio.html'>Ir a la calculadora</a></p></body></html>";
+        });
+
+        // Ruta para el favicon
+        get("/favicon.ico", (req, res) -> {
+            res.type("image/x-icon");
+            return ""; // Devuelve un favicon vacío para evitar el error
+        });
 
         // Ruta para procesar el formulario
         post("/procesar", (req, res) -> {
