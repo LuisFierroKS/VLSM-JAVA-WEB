@@ -1,8 +1,13 @@
 services:
   - name: vlsm-java-web
     type: web
+    runtime: docker
     rootDir: .
+    buildCommand: javac -cp "libs/*" -d out src/main/java/ProcesarDatos.java && jar cvf procesar-datos.jar -C out . -C src/main/resources/ .
+    startCommand: java -cp "libs/*:procesar-datos.jar" ProcesarDatos
+    dockerContext: .
     dockerfilePath: ./Dockerfile
     envVars:
       - key: PORT
         value: 8080
+    healthCheckPath: /
