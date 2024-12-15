@@ -1,8 +1,8 @@
 services:
   - name: vlsm-java-web
-    env: docker
-    buildCommand: |
-      apt-get update && apt-get install -y openjdk-17-jdk
-      javac -cp "libs/*" -d out src/ProcesarDatos.java
-      jar cvf procesar-datos.jar -C out .
-    startCommand: java -cp "libs/*;procesar-datos.jar" ProcesarDatos
+    type: web
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8080
