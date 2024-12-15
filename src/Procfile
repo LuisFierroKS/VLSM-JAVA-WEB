@@ -1,1 +1,2 @@
-web: java -cp "libs/*;procesar-datos.jar" ProcesarDatos
+web: java -cp "libs/*;out" ProcesarDatos
+
